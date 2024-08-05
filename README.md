@@ -5,11 +5,11 @@ To get started with the Credit Card Fraud Detection project, follow these steps:
 
 Clone this repository to your local machine using the following command:
 
-    git@github.com:David-Hunt327/charity-management-.git
+    git clone git@github.com:David-Hunt327/charity-management.git
 
 - Navigate to the Project Directory:
 
-      cd charity-management-
+      cd charity-management
 
 or download directly
 
