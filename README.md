@@ -1,3 +1,18 @@
+### GETTING STARTED
+To get started with the Credit Card Fraud Detection project, follow these steps:
+
+1 Clone the Repository:
+
+Clone this repository to your local machine using the following command:
+
+    git@github.com:David-Hunt327/charity-management-.git
+
+- Navigate to the Project Directory:
+
+      cd charity-management-
+
+or download directly
+
 ### SETUP
 - Unzip the file and extract to a desired location.
 - Open the file in vs code and head to the terminal.
@@ -13,13 +28,13 @@
 -  When step one is done, in command line run `node server.js` to start your development server a link would be provided `http://localhost:3000`.
 
 - If everything goes as listed, the project should run smoothly.
-- Any issues contact your supervisor.
 
 
 
 ### FUNCTIONALITIES
-- Donation 
--- Minium amount.
--- Success and processing simulation.
--- List of all transactions.
--- Login & Registration.
+- Donation
+- Localstorage as database
+- Minium amount.
+- Success and processing transaction simulation.
+- Logs of all transactions.
+- Login & Registration.
