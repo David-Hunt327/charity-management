@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard - Charity Management System</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/modal.css">
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="container3">
+        <h2 class="header2">Profile Dashboard</h2>
+        <p class="welcome-text">Welcome, <span id="username"></span></p>
+        <button class="logout-button" onclick="logout()">Logout</button>
+        <h3 class="sub-header">Your Donation History</h3>
+        <ul id="donation-history" class="donation-history">No donations found.</ul>
+        <a class="donate-link" href="#" onclick="openModal()">Donate</a>
+    </div>
+    <div id="footer-placeholder"></div>
+
+    <div id="donationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Donate</h2>
+            <label for="donationAmount">Donation Amount (in USD):</label>
+            <input type="number" id="donationAmount" required>
+            <button id="donateButton" onclick="processDonation()">Donate</button>
+            <div id="error-message"></div>
+        </div>
+    </div>
+
+    <script src="../scripts/navLoader.js"></script>
+    <script src="../scripts/footerLoader.js"></script>
+    <script>
+        window.onload = () => {
+            loadNavbar();
+            loadUserDetails();
+            loadDonationHistory();
+        };
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            localStorage.setItem('redirectAfterLogin', window.location.href);
+            window.location.href = '../views/register.html';
+        }
+
+        function openModal() {
+            document.getElementById('donationModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('donationModal').style.display = "none";
+            clearError();
+            document.getElementById('donationAmount').value = '';
+        }
+
+        function processDonation() {
+            const donateButton = document.getElementById('donateButton');
+            const donationAmount = document.getElementById('donationAmount').value;
+            const user = JSON.parse(localStorage.getItem('user'));
+            const errorMessage = document.getElementById('error-message');
+
+            if (!donationAmount) {
+                showError('Please enter a donation amount.');
+                return;
+            }
+
+            if (donationAmount < 100) {
+                showError('Donation amount must be at least 100 USD.');
+                return;
+            }
+
+            clearError();
+            donateButton.disabled = true;
+            donateButton.innerText = 'Processing Payment...';
+
+            setTimeout(() => {
+                donateButton.innerText = 'Success';
+                donateButton.style.backgroundColor = 'green';
+
+                const donationHistory = JSON.parse(localStorage.getItem('donationHistory')) || {};
+                const userDonations = donationHistory[user.username] || [];
+                const donationRecord = {
+                    amount: donationAmount,
+                    date: new Date().toLocaleString()
+                };
+
+                userDonations.push(donationRecord);
+                donationHistory[user.username] = userDonations;
+                localStorage.setItem('donationHistory', JSON.stringify(donationHistory));
+
+                setTimeout(() => {
+                    closeModal();
+                    donateButton.disabled = false;
+                    donateButton.innerText = 'Donate';
+                    donateButton.style.backgroundColor = '';
+                    loadDonationHistory();
+                }, 3000);
+            }, 5000);
+        }
+
+        function loadDonationHistory() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const donationHistory = JSON.parse(localStorage.getItem('donationHistory')) || {};
+            const userDonations = donationHistory[user.username] || [];
+
+            const donationHistoryDiv = document.getElementById('donation-history');
+            donationHistoryDiv.innerHTML = userDonations.length ? '' : 'No donations found.';
+
+            userDonations.forEach(donation => {
+                const donationItem = document.createElement('li');
+                donationItem.innerText = `$${donation.amount} - ${donation.date}`;
+                donationHistoryDiv.appendChild(donationItem);
+            });
+        }
+
+        function loadUserDetails() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            document.getElementById('username').innerText = user.username;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '../views/register.html';
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerText = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        function clearError() {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerText = '';
+            errorMessage.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
