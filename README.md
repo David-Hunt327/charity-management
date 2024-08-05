@@ -1,5 +1,5 @@
 ### GETTING STARTED
-To get started with the Credit Card Fraud Detection project, follow these steps:
+To get started with the Charity Management project, follow these steps:
 
 1 Clone the Repository:
 
